@@ -10,6 +10,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>nacos-config-client</module>
+        <module>servers-provider</module>
+        <module>common</module>
+        <module>servers-consumer</module>
     </modules>
 
     <properties>
