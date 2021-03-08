@@ -1,0 +1,16 @@
+server:
+  port: 80
+spring:
+  application:
+    name: book-servers-consumer
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+service-url:
+  createUrl: http://book-servers-provider/book/create
+  getBookUrl: http://book-servers-provider/book/get/
+  loginUrl: http://book-servers-provider/auth/login
+  registerUrl: http://book-servers-provider/auth/register
