@@ -1,5 +1,6 @@
 package com.yzk46.book.realm;
 
+import com.yzk46.book.config.MyByteSource;
 import com.yzk46.book.entities.Permission;
 import com.yzk46.book.entities.User;
 import com.yzk46.book.service.UserService;
@@ -12,7 +13,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -68,7 +68,7 @@ public class CustomerRealm extends AuthorizingRealm {
         User user = userService.getUserByName(principal);
 
         if(!ObjectUtils.isEmpty(user)){
-            return new SimpleAuthenticationInfo(user.getName(),user.getPassword(), ByteSource.Util.bytes(user.getSalt()),this.getName());
+            return new SimpleAuthenticationInfo(user.getName(),user.getPassword(), new MyByteSource(user.getSalt()),this.getName());
         } else {
             System.out.println("获取不到user对象");
         }

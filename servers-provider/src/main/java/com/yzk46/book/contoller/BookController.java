@@ -3,6 +3,7 @@ package com.yzk46.book.contoller;
 import com.yzk46.book.entities.Book;
 import com.yzk46.book.entities.CommonResult;
 import com.yzk46.book.service.BookService;
+import com.yzk46.book.util.RedisUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import javax.annotation.Resource;
  **/
 @RestController
 public class BookController {
+    @Resource
+    private RedisUtil redisUtil;
 
     @Resource
     private BookService bookService;
@@ -44,5 +47,13 @@ public class BookController {
         }else {
             return new CommonResult(400,"获取不到该数据",null);
         }
+    }
+
+    @GetMapping("/book/redis")
+    public String testRedis(@Value("key") String key){
+        boolean result =redisUtil.setString(key,"testValue");
+        if(result){
+            return "success";
+        }else return  "fail";
     }
 }

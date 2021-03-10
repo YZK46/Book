@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @program: Book
  * @description: 书籍实体类
@@ -14,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+public class Book  implements Serializable {
+    private static final long serialVersionUID = -1239139131588989917L;
     private Long id;
     private String title;
     private String author;

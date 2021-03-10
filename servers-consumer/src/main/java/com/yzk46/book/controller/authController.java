@@ -33,7 +33,8 @@ public class authController {
         return restTemplate.postForObject(loginUrl,user,CommonResult.class);
     }
 
-    @PostMapping("/consumer/get/{id}")
+
+    @PostMapping("/auth/register")
     public CommonResult<Book> register(@RequestBody User user){
         return restTemplate.postForObject(registerUrl,user,CommonResult.class);
     }

@@ -16,6 +16,10 @@ spring:
       discovery:
         server-addr: localhost:8848
 
+  redis:
+    port: 6379
+    host: localhost
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

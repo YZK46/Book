@@ -81,7 +81,7 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("/auth/register")
-    public CommonResult register(@RequestBody User user){
+    public CommonResult<User> register(@RequestBody User user){
 
 
         int result = 0;

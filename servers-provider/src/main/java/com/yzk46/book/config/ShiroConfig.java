@@ -1,5 +1,6 @@
 package com.yzk46.book.config;
 
+import com.yzk46.book.cache.RedisCacheManager;
 import com.yzk46.book.realm.CustomerRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,9 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+    @Resource
+    private RedisCacheManager redisCacheManager;
+
     //1.创建shiroFilterFactoryBean
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(DefaultWebSecurityManager defaultWebSecurityManager){
@@ -28,8 +33,8 @@ public class ShiroConfig {
 
         //创建一个Map来添加需要鉴权的链接
         Map<String,String> map = new HashMap<>();
-        map.put("/shiro/private","authc");//autc,请求这个资源需要认证和鉴权
-        map.put("/shiro/register","anon");//anon.匿名过滤器，不需要登录也能访问
+        map.put("/auth/private","authc");//autc,请求这个资源需要认证和鉴权
+//        map.put("/auth/register","anon");//anon.匿名过滤器，不需要登录也能访问
         //给filter设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
         //设置需要鉴权的链接
@@ -62,6 +67,12 @@ public class ShiroConfig {
         credentialsMatcher.setHashIterations(1024);
         //设置校验凭证匹配器
         customerRealm.setCredentialsMatcher(credentialsMatcher);
+
+        //设置缓存管理器
+        customerRealm.setCachingEnabled(true);
+        customerRealm.setAuthenticationCachingEnabled(true);
+        customerRealm.setAuthorizationCachingEnabled(true);
+        customerRealm.setCacheManager(redisCacheManager);
         return customerRealm;
     }
 }
