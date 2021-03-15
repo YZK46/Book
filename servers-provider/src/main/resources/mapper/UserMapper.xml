@@ -14,6 +14,7 @@
     <resultMap id="UserMap" type="User">
         <id column="uid" property="user_id"/>
         <result column="name" property="name"/>
+        <result column="avatar" property="avatar"/>
         <!--角色信息-->
         <collection property="roles" javaType="list" ofType="Role">
             <id column="id" property="id"/>
@@ -22,7 +23,7 @@
     </resultMap>
 
     <select id="getRoleByName" resultMap="UserMap">
-        select u.user_id uid,u.name,r.id rid,r.name rname
+        select u.user_id uid,u.name,u.avatar,r.id rid,r.name rname
         from book.user u
         left join book.user_role ur
         on u.user_id = ur.user_id
