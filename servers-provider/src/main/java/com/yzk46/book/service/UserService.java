@@ -13,4 +13,6 @@ public interface UserService {
     User getRoleByName(String name);
 
     List<Permission> getPermByname(String name);
+
+    Integer updateByName(User user);
 }

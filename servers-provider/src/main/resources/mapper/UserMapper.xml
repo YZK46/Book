@@ -40,4 +40,14 @@
         ON p.id = rp.perm_id
         where r.name = #{name};
     </select>
+
+    <update id="updateByName" parameterType="User">
+        update book.user
+        <set>
+            <if test="name != null">name=#{name},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="avatar != null">avatar=#{avatar},</if>
+        </set>
+        where user_id=#{user_id}
+    </update>
 </mapper>

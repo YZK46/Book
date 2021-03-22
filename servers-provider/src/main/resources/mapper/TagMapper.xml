@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.TagDao">
+
+    <resultMap id="TagMap" type="Tag">
+        <id column="tag_id" property="tagId"/>
+        <result column="tag_name" property="tagName"/>
+        <result column="tag_group" property="tagGroup"/>
+    </resultMap>
+
+    <insert id="save" parameterType="Tag" useGeneratedKeys="true" keyProperty="tagId">
+        INSERT INTO book.tag(tag_name,tag_group) VALUES(#{tagName},#{tagGroup})
+    </insert>
+
+    <select id="find"  resultMap="TagMap">
+        SELECT t.* FROM book.tag t;
+    </select>
+
+    <select id="findGroup"  resultType="String">
+        SELECT DISTINCT(t.tag_group) FROM book.tag t;
+    </select>
+
+    <update id="update" parameterType="Tag">
+        UPDATE book.tag t SET t.tag_group = #{tagGroup} WHERE t.tag_id = #{tagId};
+    </update>
+</mapper>

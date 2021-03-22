@@ -14,6 +14,7 @@ import javax.annotation.Resource;
  * @author: yzk46
  * @create: 2021-02-25 11:28
  **/
+@CrossOrigin
 @RestController
 public class BookController {
 
@@ -23,16 +24,24 @@ public class BookController {
     @Value("${service-url.getBookUrl}")
     private String getBookUrl;
 
+    @Value("${service-url.getByTagUrl}")
+    private String getByTagUrl;
+
     @Resource
     private RestTemplate restTemplate;
 
-    @PostMapping("/consumer/create")
+    @PostMapping("/api/create")
     public CommonResult<Book> create(@RequestBody Book book){
         return restTemplate.postForObject(createUrl,book,CommonResult.class);
     }
 
-    @GetMapping("/consumer/get/{id}")
+    @GetMapping("/api/get/{id}")
     public CommonResult<Book> get(@PathVariable("id") int id){
         return restTemplate.getForObject(getBookUrl+id,CommonResult.class);
+    }
+
+    @GetMapping("/api/book")
+    public CommonResult getBookById(@RequestParam("tagId") Long tagId){
+        return restTemplate.getForObject(getByTagUrl+"?tagId="+tagId,CommonResult.class);
     }
 }

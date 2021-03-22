@@ -15,4 +15,6 @@ public interface UserDao {
     User getRoleByName(String name);
 
     List<Permission> getPermByName(String name);
+
+    int updateByName(User user);
 }

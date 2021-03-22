@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
     public List<Permission> getPermByname(String name) {
         return userDao.getPermByName(name);
     }
+
+    @Override
+    public Integer updateByName(User user) {
+        return userDao.updateByName(user);
+    }
 }

@@ -6,6 +6,7 @@ import com.yzk46.book.service.BookService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: book
@@ -27,5 +28,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBook(Long id) {
         return bookDao.getBook(id);
+    }
+
+    @Override
+    public List<Book> getBookByTag(Long tagId) {
+        return bookDao.getBookByTag(tagId);
     }
 }

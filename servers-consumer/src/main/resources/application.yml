@@ -14,3 +14,5 @@ service-url:
   getBookUrl: http://book-servers-provider/book/get/
   loginUrl: http://book-servers-provider/auth/login
   registerUrl: http://book-servers-provider/auth/register
+  getByTagUrl: http://book-servers-provider/book
+  getTagUrl: http://book-servers-provider/tag/get
