@@ -2,6 +2,7 @@ package com.yzk46.book.service.impl;
 
 import com.yzk46.book.dao.BookDao;
 import com.yzk46.book.entities.Book;
+import com.yzk46.book.entities.Recommend;
 import com.yzk46.book.service.BookService;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,20 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getBookByTag(Long tagId) {
         return bookDao.getBookByTag(tagId);
+    }
+
+    @Override
+    public List<Book> getBookByTitle(String title) {
+        return bookDao.getBookByTitle(title);
+    }
+
+    @Override
+    public List<Recommend> getBookForSearch(String title) {
+        return bookDao.getBookForSearch(title);
+    }
+
+    @Override
+    public void updateRemark(Book book) {
+        bookDao.updateRemark(book);
     }
 }

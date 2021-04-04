@@ -6,12 +6,17 @@
 
     <resultMap id="BaseResultMap" type="com.yzk46.book.entities.Book">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="title" property="title" jdbcType="VARCHAR"/>
         <id column="author" property="author" jdbcType="VARCHAR"/>
         <id column="date" property="date" jdbcType="VARCHAR"/>
         <id column="press" property="press" jdbcType="VARCHAR"/>
         <id column="remark" property="remark" jdbcType="VARCHAR"/>
         <id column="cover" property="cover" jdbcType="VARCHAR"/>
         <id column="tagId" property="tagId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="RecommendMap" type="Recommend">
+        <id column="title" property="value" jdbcType="VARCHAR"/>
     </resultMap>
 
     <insert id="create" parameterType="Book" useGeneratedKeys="true" keyProperty="id">
@@ -23,4 +28,16 @@
     <select id="getBookByTag" parameterType="Long" resultMap="BaseResultMap">
         SELECT t.* FROM books t WHERE t.tagId = #{tagId};
     </select>
+    <select id="getBookByTitle" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM books WHERE id IN
+        (SELECT DISTINCT(t.id) FROM books t WHERE t.title LIKE "%"#{title}"%" OR t.author LIKE "%"#{title}"%" );
+    </select>
+    <select id="getBookForSearch" parameterType="String" resultMap="RecommendMap">
+        SELECT DISTINCT(t.title) FROM books t WHERE t.title LIKE "%"#{title}"%"
+        UNION ALL
+        SELECT DISTINCT(b.author) FROM books b WHERE b.author LIKE "%"#{title}"%";
+    </select>
+    <update id="updateRemark" parameterType="Book">
+        UPDATE books b SET b.remark = #{remark} WHERE b.title = #{title};
+    </update>
 </mapper>

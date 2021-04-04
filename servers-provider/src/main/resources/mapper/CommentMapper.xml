@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.CommentDao">
+    <resultMap id="CommentMap" type="Comment">
+        <id column="id" property="id" jdbcType="BIGINT"></id>
+        <id column="u_id" property="userId" jdbcType="BIGINT"></id>
+        <id column="u_avatar" property="userAvatar" jdbcType="VARCHAR"></id>
+        <id column="date" property="date" jdbcType="VARCHAR"></id>
+        <id column="b_id" property="bookId" jdbcType="BIGINT"></id>
+        <id column="c_like" property="cLike" jdbcType="BIGINT"></id>
+        <id column="content" property="content" jdbcType="VARCHAR"></id>
+        <id column="isLike" property="isLike" jdbcType="VARCHAR"></id>
+    </resultMap>
+    <insert id="setComment" parameterType="Comment" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO comment(u_id,u_avatar,date,b_id,content) VALUES(#{userId},#{userAvatar},#{date},#{bookId},#{content})
+    </insert>
+
+    <update id="updateLike" parameterType="java.util.List">
+      <foreach collection="updateList" item="item" index="index" separator=";">
+          UPDATE comment
+          <set>
+              <if test="item.likeNum != null">
+                  c_like = #{item.likeNum,jdbcType=BIGINT},
+              </if>
+          </set>
+          WHERE id = #{item.comId,jdbcType=BIGINT}
+      </foreach>
+    </update>
+
+    <select id="getComment" parameterType="int" resultMap="CommentMap">
+        select c.id, c.u_id, c.u_avatar, c.b_id, c.c_like, c.content, DATE_FORMAT(date, '%Y-%m-%d %h:%i:%s') as date,'false' AS isLike from comment c where  b_id = #{bookId}
+    </select>
+</mapper>

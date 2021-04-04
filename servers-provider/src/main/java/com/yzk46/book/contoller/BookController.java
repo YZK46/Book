@@ -1,5 +1,6 @@
 package com.yzk46.book.contoller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yzk46.book.entities.Book;
 import com.yzk46.book.entities.CommonResult;
 import com.yzk46.book.service.BookService;
@@ -72,8 +73,9 @@ public class BookController {
     }
 
     @GetMapping("/book/init")
-    public void bookInit(){
-        File file = new File("C:/Users/YZK46/Desktop/毕设/data/book.txt");
+    public CommonResult<List<Book>> bookInit(){
+        CommonResult<List<Book>> commonResult = new CommonResult(200,"success");
+        File file = new File("C:/Users/YZK46/Desktop/毕设/data/1-2.txt");
         String line = "";
         List<Book> bookList = new ArrayList<>();
         Book book = new Book();
@@ -100,7 +102,7 @@ public class BookController {
                 }
                 if(i == 5){
                     if(!"".equals(line)){
-                        content.append(line);
+                        content.append(line+"\n");
                         continue;
                     } else {
                         book.setRemark(content.toString());
@@ -122,14 +124,19 @@ public class BookController {
                 Book book2 = new Book();
                 book2 = bookList.get(j);
                 if(book2 != null){
-                    bookService.create(book2);
+                    bookService.updateRemark(book2);
                 }
             }
+            commonResult.setResult(bookList);
+            return commonResult;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            return commonResult;
         }
     }
+
 }

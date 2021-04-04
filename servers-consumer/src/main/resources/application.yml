@@ -16,3 +16,8 @@ service-url:
   registerUrl: http://book-servers-provider/auth/register
   getByTagUrl: http://book-servers-provider/book
   getTagUrl: http://book-servers-provider/tag/get
+  searchUrl: http://book-servers-provider/search
+  searchRecommendUrl: http://book-servers-provider/search/recommend
+  addCommentUrl: http://book-servers-provider/comment/add
+  getCommentUrl: http://book-servers-provider/comment/get/
+  addLikeUrl: http://book-servers-provider/comment/like

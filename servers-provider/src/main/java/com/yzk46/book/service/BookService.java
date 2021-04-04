@@ -1,6 +1,7 @@
 package com.yzk46.book.service;
 
 import com.yzk46.book.entities.Book;
+import com.yzk46.book.entities.Recommend;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,4 +14,10 @@ public interface BookService {
     Book getBook(@Param("id") Long id);
 
     List<Book> getBookByTag(Long tagId);
+
+    List<Book> getBookByTitle(String title);
+
+    List<Recommend> getBookForSearch(String title);
+
+    void updateRemark(Book book);
 }

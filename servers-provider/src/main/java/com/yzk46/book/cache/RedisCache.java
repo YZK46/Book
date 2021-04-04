@@ -25,15 +25,12 @@ public class RedisCache<K,V> implements Cache<K , V> {
 
     @Override
     public V get(K k) throws CacheException {
-        System.out.println("get Key: "+k);
         V v = (V) redisUtil.getObject(k.toString());
         return v;
     }
 
     @Override
     public V put(K k, V v) throws CacheException {
-        System.out.println("put key: "+k);
-        System.out.println("put value: "+v);
         redisUtil.setObject(k.toString(),v);
         return null;
     }

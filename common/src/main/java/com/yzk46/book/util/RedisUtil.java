@@ -3,12 +3,13 @@ package com.yzk46.book.util;
 import lombok.Data;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -160,12 +161,25 @@ public class RedisUtil<T> {
     }
 
     public Object hget(String hkey, String dataKey) {
-        return stringRedisTemplate.opsForHash().get(hkey, dataKey);
-    }
+        if(StringUtils.isEmpty(hkey) || StringUtils.isEmpty(dataKey)){
+            return null;
+        }
+        return stringRedisTemplate.opsForHash().get(hkey,dataKey);
 
+    }
     public void hset(String hkey, String dataKey,String value) {
-        stringRedisTemplate.opsForHash().put(hkey,dataKey,value);
+        if(!StringUtils.isEmpty(hkey) && !StringUtils.isEmpty(dataKey)){
+            stringRedisTemplate.opsForHash().put(hkey,dataKey,value);
+        }
     }
 
+    public Map<Object,Object> getHKeyAndValue(String key){
+        Map<Object, Object> cache = stringRedisTemplate.boundHashOps(key).entries();
+        if(CollectionUtils.isEmpty(cache)){
+            return null;
+        } else {
+            return cache;
+        }
+    }
 
 }
