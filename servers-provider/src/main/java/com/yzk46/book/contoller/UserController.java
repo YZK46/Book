@@ -2,8 +2,11 @@ package com.yzk46.book.contoller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.yzk46.book.constant.ResponseCons;
 import com.yzk46.book.entities.CommonResult;
+import com.yzk46.book.entities.Interest;
 import com.yzk46.book.entities.User;
+import com.yzk46.book.service.InterestService;
 import com.yzk46.book.service.UserService;
 import com.yzk46.book.util.RandomCharUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    InterestService interestService;
 
     @PostMapping("/user/cover")
     public String coversUpload(MultipartFile file,@RequestParam(value = "userName") String userName) throws Exception {
@@ -50,5 +56,37 @@ public class UserController {
             e.printStackTrace();
             return "";
         }
+    }
+
+    @GetMapping("/user/interest")
+    public CommonResult getInterest(@RequestParam("id") Integer id){
+        CommonResult commonResult = new CommonResult();
+        if(id > 0){
+            Interest interest = interestService.query(id);
+            if(interest != null){
+                commonResult.setResult(interest);
+                commonResult.setResultCode(ResponseCons.SUCCESS);
+                commonResult.setResultMessage(ResponseCons.QUERY_SUCCESS);
+            } else {
+                commonResult.setResultCode(ResponseCons.FAIL);
+                commonResult.setResultMessage(ResponseCons.QUERY_FAIL);
+                commonResult.setResult(null);
+            }
+        }
+        return commonResult;
+    }
+
+    @PostMapping("/user/interest/add")
+    public CommonResult addInterest(@RequestBody Interest interest){
+        CommonResult commonResult = new CommonResult(ResponseCons.FAIL,ResponseCons.ADD_FAIL,null);
+        if(interest != null){
+            Interest before = interestService.query(interest.getId());
+            if(before == null) {
+                interestService.add(interest);
+                commonResult.setResultCode(ResponseCons.SUCCESS);
+                commonResult.setResultMessage(ResponseCons.ADD_SUCCESS);
+            }
+        }
+        return commonResult;
     }
 }

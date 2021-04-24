@@ -1,12 +1,10 @@
 package com.yzk46.book.util;
 
-import lombok.Data;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -180,6 +178,20 @@ public class RedisUtil<T> {
         } else {
             return cache;
         }
+    }
+
+    public Set<String> getKeys(String prefix){
+        if(!StringUtils.isEmpty(prefix)){
+            Set<String> keys = stringRedisTemplate.keys(prefix);
+            return keys;
+        }
+        return null;
+    }
+
+
+    public List<String> getValuesByKeys(Set<String> keys){
+        List<String> values = stringRedisTemplate.opsForValue().multiGet(keys);
+        return values;
     }
 
 }

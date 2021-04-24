@@ -1,14 +1,13 @@
 package com.yzk46.book.contoller;
 
-import com.yzk46.book.cache.RedisCache;
-import com.yzk46.book.cache.RedisCacheManager;
+import com.yzk46.book.constant.RedisCons;
+import com.yzk46.book.constant.ResponseCons;
 import com.yzk46.book.entities.Comment;
 import com.yzk46.book.entities.CommonResult;
 import com.yzk46.book.entities.Like;
 import com.yzk46.book.service.CommentService;
 import com.yzk46.book.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +34,14 @@ public class CommentController {
 
     @PostMapping("/comment/add")
     public CommonResult addComment(@RequestBody Comment comment){
-        CommonResult commonResult = new CommonResult(400,"添加失败",null);
+        CommonResult commonResult = new CommonResult(ResponseCons.FAIL,ResponseCons.ADD_FAIL,null);
         if(comment != null){
             Date date = new Date();
             comment.setDate(date);
             int result = commentService.setComment(comment);
             if(result != 0){
-                commonResult.setResultMessage("添加成功");
-                commonResult.setResultCode(200);
+                commonResult.setResultMessage(ResponseCons.ADD_SUCCESS);
+                commonResult.setResultCode(ResponseCons.SUCCESS);
             }
         }
         return commonResult;
@@ -50,12 +49,12 @@ public class CommentController {
 
     @GetMapping("/comment/get/{id}")
     public CommonResult<List<Comment>> getComment(@PathVariable("id") Integer bId){
-        CommonResult<List<Comment>> commonResult = new CommonResult(400,"查询失败",null);
+        CommonResult<List<Comment>> commonResult = new CommonResult(ResponseCons.FAIL,ResponseCons.QUERY_FAIL,null);
         if(bId !=0){
             List<Comment> resultList = commentService.getComment(bId);
             if(!CollectionUtils.isEmpty(resultList)){
-                commonResult.setResultCode(200);
-                commonResult.setResultMessage("查询成功");
+                commonResult.setResultCode(ResponseCons.SUCCESS);
+                commonResult.setResultMessage(ResponseCons.QUERY_SUCCESS);
                 commonResult.setResult(resultList);
             }
         }
@@ -64,10 +63,10 @@ public class CommentController {
 
     @PostMapping("/comment/like")
     public CommonResult addLike(@RequestBody Like like){
-        CommonResult commonResult = new CommonResult<>(400,"添加失败",null);
+        CommonResult commonResult = new CommonResult<>(ResponseCons.FAIL,ResponseCons.ADD_FAIL,null);
         if(like != null){
             try{
-                String redisNum = (String) redisUtil.hget("LIKE_CACHE",like.getComId().toString());
+                String redisNum = (String) redisUtil.hget(RedisCons.LIKE_KEY,like.getComId().toString());
                 if(!StringUtils.isEmpty(redisNum))
                 {
                     Integer likeNum = Integer.valueOf(redisNum);
@@ -76,13 +75,13 @@ public class CommentController {
                     }else {
                         likeNum--;
                     }
-                    redisUtil.hset("LIKE_CACHE",like.getComId().toString(),likeNum.toString());
-                    commonResult.setResultMessage("添加成功");
-                    commonResult.setResultCode(200);
+                    redisUtil.hset(RedisCons.LIKE_KEY,like.getComId().toString(),likeNum.toString());
+                    commonResult.setResultMessage(ResponseCons.ADD_SUCCESS);
+                    commonResult.setResultCode(ResponseCons.SUCCESS);
                 } else {
-                    redisUtil.hset("LIKE_CACHE",like.getComId().toString(),"1");
-                    commonResult.setResultMessage("添加成功");
-                    commonResult.setResultCode(200);
+                    redisUtil.hset(RedisCons.LIKE_KEY,like.getComId().toString(), RedisCons.LIKE_INIT);
+                    commonResult.setResultMessage(ResponseCons.ADD_SUCCESS);
+                    commonResult.setResultCode(ResponseCons.SUCCESS);
                 }
             }catch (NullPointerException e){
 

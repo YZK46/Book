@@ -21,3 +21,13 @@ service-url:
   addCommentUrl: http://book-servers-provider/comment/add
   getCommentUrl: http://book-servers-provider/comment/get/
   addLikeUrl: http://book-servers-provider/comment/like
+  recordUrl: http://book-servers-provider/record/add
+  setRelateUrl: http://book-servers-provider/relate/set
+  getRelateUrl: http://book-servers-provider/relate/get
+  getRecommendUrl: http://book-servers-provider/relate/guess
+  getRelateNumUrl:  http://book-servers-provider/relate/getByBook
+  addHisUrl: http://book-servers-provider/his/add
+  getHisUrl: http://book-servers-provider/his/get
+  getRankUrl: http://book-servers-provider/book/getRank
+  getInterestUrl: http://book-servers-provider/user/interest
+  addInterestUrl: http://book-servers-provider/user/interest/add

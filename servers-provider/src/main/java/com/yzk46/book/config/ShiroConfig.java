@@ -30,7 +30,6 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(DefaultWebSecurityManager defaultWebSecurityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-
         //创建一个Map来添加需要鉴权的链接
         Map<String,String> map = new HashMap<>();
         map.put("/auth/private","authc");//autc,请求这个资源需要认证和鉴权
@@ -50,7 +49,6 @@ public class ShiroConfig {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         //注入realm
         defaultWebSecurityManager.setRealm(realm);
-
         return defaultWebSecurityManager;
     }
 
@@ -58,7 +56,6 @@ public class ShiroConfig {
     @Bean
     public Realm getRealm(){
         CustomerRealm customerRealm = new CustomerRealm();
-
         //修改校验凭证匹配器
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         //设置加密算法
@@ -67,7 +64,6 @@ public class ShiroConfig {
         credentialsMatcher.setHashIterations(1024);
         //设置校验凭证匹配器
         customerRealm.setCredentialsMatcher(credentialsMatcher);
-
         //设置缓存管理器
         customerRealm.setCachingEnabled(true);
         customerRealm.setAuthenticationCachingEnabled(true);

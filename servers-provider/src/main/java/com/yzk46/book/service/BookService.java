@@ -20,4 +20,16 @@ public interface BookService {
     List<Recommend> getBookForSearch(String title);
 
     void updateRemark(Book book);
+
+    List<Book> getBookByList(List<Integer> idList);
+
+    void updateRate();
+
+    List<Book> queryByRate();
+
+    List<Book> queryByBrowse();
+
+    List<Book> queryBySearch();
+
+    List<Book> queryByInterest(@Param("id") Integer id);
 }

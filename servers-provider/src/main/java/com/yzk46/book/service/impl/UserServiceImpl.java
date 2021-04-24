@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public Integer register(User user) {
+    public Integer  register(User user) {
         //1.生成随机盐
         String salt = RandomCharUtil.create(8);
         //2.将随机盐保存到数据中

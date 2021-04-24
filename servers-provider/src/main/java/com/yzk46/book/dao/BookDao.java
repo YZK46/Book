@@ -21,4 +21,16 @@ public interface BookDao {
     List<Recommend> getBookForSearch(String title);
 
     void updateRemark(Book book);
+
+    List<Book> getBookByList(@Param("idList") List<Integer> idList);
+
+    void updateRate(Book book);
+
+    List<Book> queryByRate();
+
+    List<Book> queryByBrowse();
+
+    List<Book> queryBySearch();
+
+    List<Book> queryByInterest(@Param("id") Integer id);
 }

@@ -1,6 +1,9 @@
 package com.yzk46.book.config;
 
+import com.yzk46.book.constant.QuartzCons;
 import com.yzk46.book.job.LikeTask;
+import com.yzk46.book.job.RateTask;
+import com.yzk46.book.job.RecordTask;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,21 +16,54 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 public class QuartzConfig    {
-    private static final String LIKE_TASK_IDENTITY = "LikeTaskQuartz";
 
     @Bean
-    public JobDetail quartzDetail(){
-        return JobBuilder.newJob(LikeTask.class).withIdentity(LIKE_TASK_IDENTITY).storeDurably().build();
+    public JobDetail likeDetail(){
+        return JobBuilder.newJob(LikeTask.class).withIdentity(QuartzCons.LIKE_TASK_IDENTITY).storeDurably().build();
     }
 
     @Bean
-    public Trigger quartzTrigger(){
+    public JobDetail recordDetail(){
+        return JobBuilder.newJob(RecordTask.class).withIdentity(QuartzCons.RECORD_TASK_IDENTITY).storeDurably().build();
+    }
+
+    @Bean
+    public JobDetail rateDetail(){
+        return JobBuilder.newJob(RateTask.class).withIdentity(QuartzCons.RATE_TASK_IDENTITY).storeDurably().build();
+    }
+
+    @Bean
+    public Trigger likeTrigger(){
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
 //                .withIntervalInSeconds(10)  //设置时间周期单位秒
-                .withIntervalInMinutes(1)  //一个小时执行一次
+                .withIntervalInHours(1)  //一个小时执行一次
                 .repeatForever();
-        return TriggerBuilder.newTrigger().forJob(quartzDetail())
-                .withIdentity(LIKE_TASK_IDENTITY)
+        return TriggerBuilder.newTrigger().forJob(likeDetail())
+                .withIdentity(QuartzCons.LIKE_TASK_IDENTITY)
+                .withSchedule(scheduleBuilder)
+                .build();
+    }
+
+    @Bean
+    public Trigger recordTrigger(){
+        SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
+//                .withIntervalInSeconds(10)  //设置时间周期单位秒
+                .withIntervalInMinutes(5)  //每5分钟执行一次
+                .repeatForever();
+        return TriggerBuilder.newTrigger().forJob(recordDetail())
+                .withIdentity(QuartzCons.RECORD_TASK_IDENTITY)
+                .withSchedule(scheduleBuilder)
+                .build();
+    }
+
+    @Bean
+    public Trigger ratedTrigger(){
+        SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
+//                .withIntervalInSeconds(10)  //设置时间周期单位秒
+                .withIntervalInHours(24)  //一天执行一次
+                .repeatForever();
+        return TriggerBuilder.newTrigger().forJob(rateDetail())
+                .withIdentity(QuartzCons.RATE_TASK_IDENTITY)
                 .withSchedule(scheduleBuilder)
                 .build();
     }

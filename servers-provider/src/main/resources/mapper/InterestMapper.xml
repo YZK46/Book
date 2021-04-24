@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.InterestDao">
+    <select id="query" parameterType="INT" resultType="Interest">
+        SELECT * FROM interest i where i.user_id = #{id};
+    </select>
+    <insert id="add" parameterType="Interest" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO interest (user_id,tag1,tag2,tag3,tag4,tag5) VALUES (#{userId},#{tag1},#{tag2},#{tag3},#{tag4},#{tag5})
+    </insert>
+</mapper>

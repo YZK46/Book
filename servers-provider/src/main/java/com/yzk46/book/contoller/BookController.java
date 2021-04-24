@@ -1,6 +1,7 @@
 package com.yzk46.book.contoller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yzk46.book.constant.ResponseCons;
 import com.yzk46.book.entities.Book;
 import com.yzk46.book.entities.CommonResult;
 import com.yzk46.book.service.BookService;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: book
@@ -66,16 +69,16 @@ public class BookController {
     public CommonResult getBookByTag(@RequestParam("tagId") Long tagId){
         List<Book> bookList = bookService.getBookByTag(tagId);
         if(!CollectionUtils.isEmpty(bookList)){
-            return new CommonResult(200,"获取数据成功",bookList);
+            return new CommonResult(ResponseCons.SUCCESS,"获取数据成功",bookList);
         }else {
-            return new CommonResult(400,"获取数据为空",null);
+            return new CommonResult(ResponseCons.FAIL,"获取数据为空",null);
         }
     }
 
     @GetMapping("/book/init")
-    public CommonResult<List<Book>> bookInit(){
+    public CommonResult<List<Book>> bookInit(@RequestParam String fileName,@RequestParam Long tagId){
         CommonResult<List<Book>> commonResult = new CommonResult(200,"success");
-        File file = new File("C:/Users/YZK46/Desktop/毕设/data/1-2.txt");
+        File file = new File("C:/Users/YZK46/Desktop/毕设/data/"+fileName+".txt");
         String line = "";
         List<Book> bookList = new ArrayList<>();
         Book book = new Book();
@@ -101,6 +104,12 @@ public class BookController {
                     book.setDate(line);
                 }
                 if(i == 5){
+                    book.setPageNum(line);
+                }
+                if(i == 6){
+                    book.setPrice(line);
+                }
+                if(i == 7){
                     if(!"".equals(line)){
                         content.append(line+"\n");
                         continue;
@@ -114,6 +123,9 @@ public class BookController {
                         book1.setPress(book.getPress());
                         book1.setCover(book.getCover());
                         book1.setDate(book.getDate());
+                        book1.setPrice(book.getPrice());
+                        book1.setPageNum(book.getPageNum());
+                        book1.setTagId(tagId);
                         bookList.add(book1);
                         i = -1;
                     }
@@ -124,7 +136,7 @@ public class BookController {
                 Book book2 = new Book();
                 book2 = bookList.get(j);
                 if(book2 != null){
-                    bookService.updateRemark(book2);
+                    bookService.create(book2);
                 }
             }
             commonResult.setResult(bookList);
@@ -138,5 +150,22 @@ public class BookController {
             return commonResult;
         }
     }
+
+    @GetMapping("/book/getRank")
+    public CommonResult<Map<String,Object>> getRank(){
+        CommonResult<Map<String,Object>> commonResult = new CommonResult<>(ResponseCons.FAIL,ResponseCons.QUERY_FAIL,null);
+        Map<String,Object> resultMap = new HashMap<>();
+        List<Book> rateList = bookService.queryByRate();
+        List<Book> browseList = bookService.queryByBrowse();
+        List<Book> searchList = bookService.queryBySearch();
+        resultMap.put("rate",rateList);
+        resultMap.put("browse",browseList);
+        resultMap.put("search",searchList);
+        commonResult.setResultCode(ResponseCons.SUCCESS);
+        commonResult.setResultMessage(ResponseCons.QUERY_SUCCESS);
+        commonResult.setResult(resultMap);
+        return commonResult;
+    }
+
 
 }

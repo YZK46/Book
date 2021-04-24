@@ -1,10 +1,8 @@
 package com.yzk46.book.contoller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yzk46.book.entities.Book;
-import com.yzk46.book.entities.CommonResult;
-import com.yzk46.book.entities.Recommend;
-import com.yzk46.book.entities.Tag;
+import com.yzk46.book.constant.ResponseCons;
+import com.yzk46.book.entities.*;
 import com.yzk46.book.service.BookService;
 import com.yzk46.book.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,12 @@ public class SearchController {
     @Autowired
     BookService bookService;
 
+    @Autowired
+    RecordController recordController;
+
     @GetMapping("/search")
     public CommonResult<List<Book>> searchBook(@RequestParam("content") String searchContent){
-        CommonResult<List<Book>> commonResult = new CommonResult<>(400,"查询失败",null);
+        CommonResult<List<Book>> commonResult = new CommonResult<>(ResponseCons.FAIL,"查询失败",null);
         List<Book> searchResult = new ArrayList<>();
         if(!StringUtils.isEmpty(searchContent)){
             List<Tag> tagList = tagService.find();
@@ -52,7 +53,7 @@ public class SearchController {
             List<Book> bookList = bookService.getBookByTitle(searchContent);
             if(!CollectionUtils.isEmpty(bookList)){
                 searchResult.addAll(bookList);
-                commonResult.setResultCode(200);
+                commonResult.setResultCode(ResponseCons.SUCCESS);
                 commonResult.setResultMessage("查询成功");
                 commonResult.setResult(searchResult);
             }

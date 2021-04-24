@@ -27,6 +27,9 @@ public class BookController {
     @Value("${service-url.getByTagUrl}")
     private String getByTagUrl;
 
+    @Value("${service-url.getRankUrl}")
+    private String getRankUrl;
+
     @Resource
     private RestTemplate restTemplate;
 
@@ -43,5 +46,10 @@ public class BookController {
     @GetMapping("/api/book")
     public CommonResult getBookById(@RequestParam("tagId") Long tagId){
         return restTemplate.getForObject(getByTagUrl+"?tagId="+tagId,CommonResult.class);
+    }
+
+    @GetMapping("/api/book/getRank")
+    public CommonResult getRank(){
+        return restTemplate.getForObject(getRankUrl,CommonResult.class);
     }
 }

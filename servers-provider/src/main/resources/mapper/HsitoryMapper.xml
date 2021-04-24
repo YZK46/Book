@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.HistoryDao">
+    <resultMap id="HisMap" type="History">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="u_id" property="userId" jdbcType="BIGINT"/>
+        <id column="b_id" property="bookId" jdbcType="BIGINT"/>
+        <id column="date" property="date" jdbcType="DATE"/>
+    </resultMap>
+    <insert id="addHis" parameterType="History" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO history (u_id,b_id,date) VALUES(#{userId},#{bookId},SYSDATE());
+    </insert>
+    <select id="getHis" parameterType="Int" resultMap="HisMap">
+        SELECT * FROM history h where h.u_id = #{uId};
+    </select>
+</mapper>

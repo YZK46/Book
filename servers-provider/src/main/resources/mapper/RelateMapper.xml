@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.RelateDao">
+    <resultMap id="relateMap" type="Relate">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <id column="book_id" property="bookId" jdbcType="BIGINT"/>
+        <id column="relating" property="relating" jdbcType="BIGINT"/>
+    </resultMap>
+    <update id="updateRelate" parameterType="Relate">
+        UPDATE relate r SET r.relating = #{relating} WHERE r.user_id = #{userId} AND r.book_id = #{bookId};
+    </update>
+    <insert id="addRelate" parameterType="Relate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO relate (user_id,book_id,relating) VALUES(#{userId},#{bookId},#{relating});
+    </insert>
+    <select id="getRelate" parameterType="Relate" resultMap="relateMap">
+        SELECT * FROM relate r WHERE r.user_id = #{userId} AND r.book_id = #{bookId};
+    </select>
+    <select id="getRelateByBook" parameterType="Relate" resultMap="relateMap">
+        SELECT * FROM relate r WHERE r.book_id = #{bookId};
+    </select>
+    <select id="getAllRelate" resultMap="relateMap">
+        select * from relate r;
+    </select>
+</mapper>

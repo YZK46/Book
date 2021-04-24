@@ -61,9 +61,11 @@ public class CommnetServiceImpl implements CommentService {
             }
         }
         if(log.isInfoEnabled()){
-            log.info("点赞更新的数据为:", JSON.toJSONString(updateList));
+            log.info("点赞更新的数据为:{}", JSON.toJSONString(updateList));
         }
-        commentDao.updateLike(updateList);
+        if(!CollectionUtils.isEmpty(updateList)){
+            commentDao.updateLike(updateList);
+        }
         return 0;
     }
 }

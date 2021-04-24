@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzk46.book.dao.RecordDao">
+    <resultMap id="RecordMap" type="Record">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="search_times" property="searchTimes" jdbcType="BIGINT"/>
+        <id column="browse_times" property="browseTimes" jdbcType="BIGINT"/>
+        <id column="book_id" property="bookId" jdbcType="BIGINT"/>
+    </resultMap>
+    <update id="updateRecord" parameterType="java.util.List">
+        <foreach collection="recordList" index="index" item="item" separator=";">
+            UPDATE book_record br
+            <set>
+                <if test="item.searchTimes!=null">
+                    br.search_times = #{item.searchTimes,jdbcType=BIGINT},
+                </if>
+                <if test="item.browseTimes!=null">
+                    br.browse_times = #{item.browseTimes,jdbcType=BIGINT},
+                </if>
+            </set>
+            WHERE br.book_id = #{item.bookId,jdbcType=BIGINT}
+        </foreach>
+
+    </update>
+    <select id="getRecord" parameterType="INT" resultMap="RecordMap">
+        SELECT * FROM book_record br where br.book_id = #{id};
+    </select>
+</mapper>

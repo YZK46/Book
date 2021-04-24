@@ -13,6 +13,9 @@
         <id column="remark" property="remark" jdbcType="VARCHAR"/>
         <id column="cover" property="cover" jdbcType="VARCHAR"/>
         <id column="tagId" property="tagId" jdbcType="BIGINT"/>
+        <id column="pageNum" property="pageNum" jdbcType="VARCHAR"/>
+        <id column="price" property="price" jdbcType="VARCHAR"/>
+        <id column="rate" property="rate" jdbcType="DOUBLE"/>
     </resultMap>
 
     <resultMap id="RecommendMap" type="Recommend">
@@ -20,17 +23,23 @@
     </resultMap>
 
     <insert id="create" parameterType="Book" useGeneratedKeys="true" keyProperty="id">
-        insert into books(title,author,date,press,remark,cover,tagId) values (#{title},#{author},#{date},#{press},#{remark},#{cover},#{tagId});
+        insert into books(title,author,date,press,remark,cover,tagId,price,pageNum) values (#{title},#{author},#{date},#{press},#{remark},#{cover},#{tagId},#{price},#{pageNum});
     </insert>
     <select id="getBook" parameterType="Long" resultMap="BaseResultMap">
-        SELECT  t.id, t.title, t.author, t.date, t.press, t.remark , t.cover, t.tagId FROM books t where id = #{id};
+        SELECT  t.id, t.title, t.author, t.date, t.press, t.remark , t.cover, t.tagId,t.pageNUm,t.price,t.rate FROM books t where id = #{id};
+    </select>
+    <select id="getBookByList" parameterType="java.util.List" resultMap="BaseResultMap">
+        select t.* from books t where t.id IN
+        <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
     <select id="getBookByTag" parameterType="Long" resultMap="BaseResultMap">
         SELECT t.* FROM books t WHERE t.tagId = #{tagId};
     </select>
     <select id="getBookByTitle" parameterType="String" resultMap="BaseResultMap">
         SELECT * FROM books WHERE id IN
-        (SELECT DISTINCT(t.id) FROM books t WHERE t.title LIKE "%"#{title}"%" OR t.author LIKE "%"#{title}"%" );
+        (SELECT DISTINCT(t.id) FROM books t WHERE t.title LIKE "%"#{title}"%" OR t.author LIKE "%"#{title}"%" ) GROUP BY title;
     </select>
     <select id="getBookForSearch" parameterType="String" resultMap="RecommendMap">
         SELECT DISTINCT(t.title) FROM books t WHERE t.title LIKE "%"#{title}"%"
@@ -40,4 +49,19 @@
     <update id="updateRemark" parameterType="Book">
         UPDATE books b SET b.remark = #{remark} WHERE b.title = #{title};
     </update>
+    <update id="updateRate" parameterType="Book">
+        UPDATE books b SET b.rate = #{rate} WHERE b.id = #{id};
+    </update>
+    <select id="queryByRate" resultMap="BaseResultMap">
+        SELECT * FROM books b ORDER BY b.rate DESC LIMIT 10;
+    </select>
+    <select id="queryByBrowse" resultMap="BaseResultMap">
+        SELECT b.* FROM books b,book_record br WHERE b.id = br.book_id ORDER BY br.browse_times DESC LIMIT 10;
+    </select>
+    <select id="queryBySearch" resultMap="BaseResultMap">
+        SELECT b.*,br.search_times FROM books b,book_record br WHERE b.id = br.book_id ORDER BY br.search_times DESC LIMIT 10;
+    </select>
+    <select id="queryByInterest" parameterType="INT" resultMap="BaseResultMap">
+        SELECT * FROM books b,interest i WHERE i.user_id = #{id} AND b.tagId IN (i.tag1,i.tag2,i.tag3,i.tag4,i.tag5) ORDER BY RAND() LIMIT 10;
+    </select>
 </mapper>

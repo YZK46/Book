@@ -1,10 +1,9 @@
 package com.yzk46.book.contoller;
 
-import com.yzk46.book.entities.CommonResult;
-import com.yzk46.book.entities.Permission;
-import com.yzk46.book.entities.Role;
-import com.yzk46.book.entities.User;
+import com.yzk46.book.entities.*;
+import com.yzk46.book.service.RoleService;
 import com.yzk46.book.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -23,9 +22,13 @@ import java.util.List;
  * @create: 2021-03-07 11:07
  **/
 @RestController
+@Slf4j
 public class AuthController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/shiro/private")
     public String shiroPublic(){
@@ -35,12 +38,9 @@ public class AuthController {
     @CrossOrigin
     @PostMapping("/auth/login")
     public CommonResult<User> shiroPrivate(@RequestBody User user){
-
         CommonResult<User> commonResult = new CommonResult<>();
         //获取主体对象
         Subject subject = SecurityUtils.getSubject();
-
-
         if(user != null){
             try {
                 UsernamePasswordToken token = new UsernamePasswordToken(user.getName(),user.getPassword());
@@ -74,16 +74,20 @@ public class AuthController {
         return commonResult;
     }
 
-    @GetMapping("/auth/Index")
-    public String shiroIndex(){
+    @GetMapping("/auth/init")
+    public String userInit(){
+        for (int i = 10; i <98 ; i++) {
+            User user = new User();
+            user.setName("user"+i);
+            user.setPassword("user"+i);
+            register(user);
+        }
         return "Hello world";
     }
 
     @CrossOrigin
     @PostMapping("/auth/register")
     public CommonResult<User> register(@RequestBody User user){
-
-
         int result = 0;
         if(user != null){
             User user1 = userService.getUserByName(user.getName());
@@ -94,6 +98,12 @@ public class AuthController {
             }
         }
         if(result != 0){
+            User user1 = userService.getUserByName(user.getName());
+            log.info("查询角色为:{}",user1);
+            UserRole ur = new UserRole();
+            ur.setRoleId(2);
+            ur.setUserId(Integer.valueOf(String.valueOf(user1.getUser_id())));
+            roleService.initRole(ur);
             return new CommonResult(200,"注册成功",null);
         }
         return new CommonResult(402,"注册失败",null);

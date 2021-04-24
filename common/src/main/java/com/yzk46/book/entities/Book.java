@@ -26,6 +26,7 @@ public class Book  implements Serializable {
     private String remark;
     private String cover;
     private Long tagId;
-    private Long price;
-    private Long pageNum;
+    private String price;
+    private String pageNum;
+    private Double rate;
 }
